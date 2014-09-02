@@ -1,14 +1,17 @@
 object @track
+cache @track
 
 attribute :_id => :id
 attribute :title
 
 child :artist do
-  extends 'api/artist'
+  attribute :_id => :id
+  attributes :name
 end
 
 child :album do
-  extends 'api/album'
+  attribute :_id => :id
+  attributes :name
 end
 
 attributes :year, :track, :disc, :total_tracks, :total_discs,
