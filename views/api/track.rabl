@@ -1,5 +1,4 @@
 object @track
-cache @track
 
 attribute :_id => :id
 attribute :title
