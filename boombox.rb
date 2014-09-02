@@ -83,16 +83,41 @@ class Boombox < Sinatra::Base
   end
 
   post '/ajax/edit-modal' do
-    if params[:query].length == 1 # single track edit
-      body partial :single_edit, :locals => {:query => params[:query], :track => Track.find(params[:query].first)}
-    else
-      result = {}
-      placeholder = {:artist => [], :year =>[], :total_tracks => [], :disc => [], :total_discs => [], :albumartist => [], :album => [], :genre => [], :bpm => []}
-      Track.find(params[:query]).each {|track|
-        placeholder.each_pair {|key, value| value << track.send(key)}
+
+    # single track edit
+    if params[:query].length == 1
+      body partial :single_edit, :locals => {
+        :query => params[:query],
+        :track => Track.find(params[:query].first)
       }
-      placeholder.each_pair {|key, arry| arry.uniq!; result[key] = arry.length == 1 ?  arry.first : nil}
-      body partial :multi, :locals => {:query => params[:query] , :track => result}
+    else
+
+      result = {}
+      placeholder = {
+        :artist => [],
+        :year =>[],
+        :total_tracks => [],
+        :disc => [],
+        :total_discs => [],
+        :albumartist => [],
+        :album => [],
+        :genre => [],
+        :bpm => []
+      }
+
+      Track.find(params[:query]).each { |track|
+        placeholder.each_pair { |key, value| value << track.send(key) }
+      }
+
+      placeholder.each_pair { |key, arry|
+        arry.uniq!
+        result[key] = arry.length == 1 ?  arry.first : nil
+      }
+
+      body partial :multi, :locals => {
+        :query => params[:query],
+        :track => result
+      }
     end
   end
 
@@ -103,7 +128,7 @@ class Boombox < Sinatra::Base
     if ids.length > 1
       tag.delete 'title' # delete per-track specific title
       # delete any keys that aren't checkmarked
-      tag.delete_if {|key, value| !params[:check].include? key }
+      tag.delete_if { |key, value| !params[:check].include? key }
     end
 
     tracks = Track.find(ids)
@@ -119,10 +144,14 @@ class Boombox < Sinatra::Base
   end
 
   get '/api/search/:query' do
-    # if string is empty, return all tracks instead of searching for it, speed optimization
-    tracks = (params[:query].blank? ? Track : Track.where(:$or => [
-      {:title => /#{params[:query]}/i}
-    ])).asc(:album, :disc, :track).all
+
+    if params[:query].blank?
+      tracks = Track.asc(:album, :disc, :track).all
+    else
+      tracks = Track.where(:$or => [{
+        :title => /#{params[:query]}/i
+      }]).asc(:album, :disc, :track).all
+    end
 
     json tracks
   end
@@ -140,7 +169,12 @@ class Boombox < Sinatra::Base
         json :error => "404 - Not Found"
       end
     else
-      json :album => "Unknown", :artist => "Unknown", :title => "No song", :cover => "/img/blank.png"
+      json({
+        :album => "Unknown",
+        :artist => "Unknown",
+        :title => "No song",
+        :cover => "/img/blank.png"
+      })
     end
   end
 
