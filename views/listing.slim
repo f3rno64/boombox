@@ -11,15 +11,10 @@ div#table-album-list
         th.album Album
 
     tbody
-      tr ng-repeat="track in tracks" id="{{ track._id }}" ng-class="{separator: track.cover.length}"
-        td.cover ng-bind-html-unsafe="track.cover" ng-if="track.cover.length" rowspan="{{ track.rowspan }}"
-        td.track_num
-          | {{ track.track }}
-        td.title
-          | {{ track.title }}
-        td.time
-          | {{ track.length }}
-        td.artist
-          | {{ track.artist.name }}
-        td.album
-          | {{ track.album.name }}
+      tr ng-repeat="track in tracks" id="{{ track.id }}" ng-class="{ separator: track.cover }"
+        td.cover ng-bind-html-unsafe="track.cover" ng-if="track.cover" rowspan="{{ track.rowspan }}"
+        td.track_num ng-bind="track.track"
+        td.title ng-bind="track.title"
+        td.time ng-bind="track.length"
+        td.artist ng-bind="track.artist.name"
+        td.album ng-bind="track.album.name"

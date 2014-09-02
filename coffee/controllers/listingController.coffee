@@ -81,31 +81,30 @@ window.boomboxApp.controller "listingController", ($scope, $http) ->
     rowspan = [1]
     for track, i in data
       if i < data.length - 1
-        if track.album._id == data[i+1].album._id
+        if track.album.id == data[i+1].album.id
           rowspan[rowspan.length - 1] += 1
         else
           rowspan.push 1
 
     setupCover = (track, i) ->
-      coverUrl = track.cover
-      row = rowspan.shift()
-      cover =  "<div></div>"
-      if row > 7
-        cover = '<div class="img">'
-        cover += '<img src="' + coverUrl + '"/>'
-        cover += "</div>"
-      track.cover = cover
-      track.rowspan = row
+      track.rowspan = rowspan.shift()
+
+      if track.rowspan > 7
+        track.cover = """
+        <div class="img">
+          <img src="#{track.cover}" />
+        </div>
+        """
+      else
+        track.cover = "<div></div>"
+
       track
 
     # Go through and set up covers
     for track, i in data
-      if i == 0
-        track = setupCover(track, i)
-      else if track.album._id != data[i - 1].album._id
-        track = setupCover(track, i)
+      if i == 0 or track.album.id != data[i - 1].album.id
+        track = setupCover track, i
       else
         track.cover = false
-      data[i] = track
 
     $scope.tracks = data
