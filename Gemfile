@@ -13,7 +13,7 @@ gem 'oj'
 gem 'rabl'
 
 gem 'warden', '~> 1.2.1'
-gem 'bcrypt-ruby'
+gem 'bcrypt'
 
 gem 'taglib-ruby', require: 'taglib'
 
