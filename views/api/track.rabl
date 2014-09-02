@@ -14,4 +14,4 @@ child :album do
 end
 
 attributes :year, :track, :disc, :total_tracks, :total_discs,
- :genre,  :rating, :bpm, :duration, :length, :cover, :created_at, :updated_at
+ :genre,  :rating, :bpm, :duration, :length, :cover, :created_at, :updated_at, :filename
