@@ -1,5 +1,5 @@
 doctype html
-html data-ng-app="boombox"
+html ng-app="boombox"
   head
     meta charset="utf-8"
     title Boombox
@@ -93,7 +93,7 @@ html data-ng-app="boombox"
         #now-playing
           .title Now Playing
           .cover: img src=""
-      #contents data-ng-view="" class=(request.path[1..-1])
+      #contents ng-view="" class=(request.path[1..-1])
 
     footer.statusbar
       #side-status
